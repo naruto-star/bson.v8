@@ -10,3 +10,7 @@ Convert from a bson to the v8 object, This project will help u to use mongodb be
 `ParseBSON(const char* buffer)` provide u can pass a bson raw data.
 
 `ParseBSON(const bson* buffer)` provide u can pass a bson object.
+
+## LICENSE
+
+MIT
