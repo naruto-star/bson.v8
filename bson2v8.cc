@@ -1,4 +1,3 @@
-
 #include "bson2v8.h"
 
 using namespace v8;
@@ -82,8 +81,7 @@ namespace bson2v8 {
 
   Local<Object> 
   Utilities::ParseBSON (const bson* b) {
-    const char* buffer = bson_data(b);
-    return ParseBSON(buffer);
+    return ParseBSON(b->data);
   }
 
 
