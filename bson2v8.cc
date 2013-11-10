@@ -1,7 +1,11 @@
+
 #include "bson2v8.h"
+
+#define V8Symbol v8::String::NewSymbol
 
 using namespace v8;
 using namespace std;
+
 
 // Handle legacy V8 API
 namespace bson2v8 {
