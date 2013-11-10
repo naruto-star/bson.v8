@@ -55,11 +55,12 @@ namespace bson2v8 {
           String::New(bson_iterator_string(iterator)));
         break;
       case BSON_OBJECT:
-      case BSON_ARRAY:
         object->Set(String::NewSymbol(name), ParseBSON(bson_iterator_value(iterator)));
         break;
+      case BSON_ARRAY:
+        object->Set(String::NewSymbol(name), ParseBSON(bson_iterator_value(iterator), 1));
+        break;
       case BSON_BINDATA:
-        /* TODO */
         object->Set(String::NewSymbol(name), String::New("null"));
         break;
       case BSON_OID:
@@ -82,9 +83,19 @@ namespace bson2v8 {
     return object;
   }
 
+  Local<Object>
+  Utilities::ParseBSON (const char* buffer) {
+    return ParseBSON(buffer, 0);
+  }
+
+  Local<Object> 
+  Utilities::ParseBSON (const bson* b, int array_flag) {
+    return ParseBSON(b->data, array_flag);
+  }
+
   Local<Object> 
   Utilities::ParseBSON (const bson* b) {
-    return ParseBSON(b->data);
+    return ParseBSON(b->data, 0);
   }
   
   void
