@@ -29,6 +29,9 @@ namespace bson2v8 {
     Local<Object> object = Object::New();
     bson_iterator iterator[1];
     bson_iterator_from_buffer(iterator, buffer);
+    
+    if (array_flag == 1)
+      object = Array::New();
 
     while (bson_iterator_next(iterator)) {
       const int type = bson_iterator_type(iterator);
