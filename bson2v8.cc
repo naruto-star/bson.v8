@@ -83,6 +83,66 @@ namespace bson2v8 {
   Utilities::ParseBSON (const bson* b) {
     return ParseBSON(b->data);
   }
+  
+  void
+  Utilities::ToBSON (Local<Value> in, bson* out) {
+    
+    Local<Object> global = Context::GetCurrent()->Global();
+    Local<Object> JSObject = Local<Object>::Cast(global->Get(V8Symbol("Object")));
+    Local<Function> ObjKeysFunc = Local<Function>::Cast(JSObject->Get(V8Symbol("keys")));
+
+    int ownsData = out->ownsData;
+    uint32_t keys_len = 0;
+    Local<Value> argv[1] = {in};
+    Local<Array> keys = Local<Array>::Cast(ObjKeysFunc->Call(global, 1, argv));
+
+    if (1 != ownsData) bson_init(out);    
+    if (in->IsArray()) {
+      keys_len = Local<Array>::Cast(in)->Length();
+    } else if (in->IsObject()) {
+      Local<Value> argv[1] = { in };
+      keys_len = keys->Length();
+    }
+
+    for (uint32_t i=0; i<keys_len; i++) {
+      char* key; Local<Value> value;
+      if (in->IsArray()) {
+        key = reinterpret_cast<char*>(&i);
+        value = Local<Object>::Cast(in)->Get(i);
+      }
+      else if (in->IsObject()) {
+        key = GetCStringFromV8String(keys->Get(i), "");
+        value = Local<Object>::Cast(in)->Get(V8Symbol(key));
+      };
+      if (value->IsString() || value->IsStringObject()) {
+        bson_append_string(out, key, GetCStringFromV8String(value, ""));
+      }
+      else if (value->IsNumber() || value->IsNumberObject()) {
+        bson_append_int(out, key, value->Uint32Value());
+      }
+      else if (value->IsTrue()) {
+        bson_append_bool(out, key, true);
+      }
+      else if (value->IsFalse()) {
+        bson_append_bool(out, key, false);
+      }
+      else if (value->IsDate()) {
+        bson_append_date(out, key, Local<Date>::Cast(value)->NumberValue());
+      }
+      else if (value->IsArray()) {
+        bson_append_start_array(out, key);
+        ToBSON(value, out);
+        bson_append_finish_array(out);
+      }
+      else if (value->IsObject()) {
+        bson_append_start_object(out, key);
+        ToBSON(value, out);
+        bson_append_finish_object(out);
+      };
+    };
+    // finish this bson
+    if (1 != ownsData) bson_finish(out);
+  }
 
 
 }
