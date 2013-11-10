@@ -1,4 +1,4 @@
-bson2v8
+bson.v8
 =======
 
 deps: 
