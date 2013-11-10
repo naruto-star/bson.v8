@@ -1,4 +1,3 @@
-
 #ifndef Included_BSON2V8_H
 #define Included_BSON2V8_H
 
@@ -6,7 +5,6 @@
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
-#include "config.h"
 #include "mongo/src/mongo.h"
 
 using namespace v8;
@@ -33,7 +31,11 @@ namespace bson2v8 {
      */
     static Local<Object> ParseBSON (const char* buffer);
     static Local<Object> ParseBSON (const bson* buffer);
-
+    
+    /*
+     * conver a v8 obj to bson for inserting
+     */
+    static void ToBSON(Local<Value> in, bson* out);
 
   };
 
