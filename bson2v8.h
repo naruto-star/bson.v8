@@ -30,7 +30,9 @@ namespace bson2v8 {
      * parse and convert the bson to v8 object
      */
     static Local<Object> ParseBSON (const char* buffer);
+    static Local<Object> ParseBSON (const char* buffer, int array_flag);
     static Local<Object> ParseBSON (const bson* buffer);
+    static Local<Object> ParseBSON (const bson* buffer, int array_flag);
     
     /*
      * conver a v8 obj to bson for inserting
