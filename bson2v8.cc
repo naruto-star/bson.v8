@@ -1,4 +1,3 @@
-
 #include "bson2v8.h"
 
 #define V8Symbol v8::String::NewSymbol
@@ -111,7 +110,8 @@ namespace bson2v8 {
     for (uint32_t i=0; i<keys_len; i++) {
       char* key; Local<Value> value;
       if (in->IsArray()) {
-        key = reinterpret_cast<char*>(&i);
+        std::ostringstream oss; oss << i;
+        key = const_cast<char*>(oss.str().c_str());
         value = Local<Object>::Cast(in)->Get(i);
       }
       else if (in->IsObject()) {
