@@ -1,0 +1,5 @@
+{
+  "name": "bson.v8",
+  "version": "0.0.1",
+  "description": "bson.v8 is an c/c++ project for doing a integration between with bson in mongo and v8 api"
+}
